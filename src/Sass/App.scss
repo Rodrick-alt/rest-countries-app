@@ -1,0 +1,140 @@
+/* BASIC ****************************************************** */
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* * {
+  outline: 1px solid #f00 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+} */
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  min-height: 100% !important;
+  height: 100%;
+  font-size: 14px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+// Light Variables
+:root{
+  --light-mode-text: hsl(200, 15%, 8%);
+  --light-mode-bg: hsl(0, 0%, 98%);
+  --light-mode-input: hsl(0, 0%, 52%);
+  --light-mode-elements: hsl(0, 0%, 100%);
+}
+// Dark Variables
+:root{
+  --dark-mode-text: hsl(0, 0%, 100%);
+  --dark-mode-elements: hsl(209, 23%, 22%);
+  --dark-mode-bg: hsl(207, 26%, 17%);
+}
+
+
+body,
+main,
+#root,
+#page-wrapper {
+  height: 100%;
+  font-family: 'Nunito Sans', sans-serif;
+  color: var(--light-mode-text);
+  background-color: var(--light-mode-bg);
+}
+
+#page-wrapper,
+#info-group,
+main {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+}
+#page-wrapper, body, html {
+  height: auto;
+}
+#page-wrapper{
+  gap: 3rem;
+}
+
+/*  ******************************************************* */
+button{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  img{
+    width: 20px;
+  }
+}
+
+header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: var(--light-mode-elements);
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    gap: 1.4rem;
+    padding: 1.5rem 0;
+    h1{
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+  }
+}
+
+main{
+  width: 100%;
+  .form-section{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    gap: 1rem;
+    form{
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+      gap:1rem;
+      padding: 1rem 1.5rem;
+      border-radius: 5px;
+      box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+      background-color: var(--light-mode-elements);
+    }
+  }
+}
+.search-form{
+  width: 40%;
+  min-width: 300px;
+  input{
+    width: 100%;
+    outline: none;
+    border: none;
+  }
+}
+
+.select-form{
+  width: 15%;
+  min-width: 225px;
+  select{
+    width: 100%;
+    outline: none;
+    border: none;
+  }
+}
