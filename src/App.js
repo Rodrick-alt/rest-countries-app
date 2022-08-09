@@ -1,6 +1,7 @@
 import './Styles/App.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import CustomSelect from './Components/CustomSelect';
 
 function App() {
   // an array of components describing countries
@@ -32,16 +33,7 @@ function App() {
               name='country-search'
               placeholder='Search for a country...' />
           </form>
-          <form action='' className='select-form'>
-            <select name='region' id='region'>
-              <option value="" disabled selected hidden>Filter by Region</option>
-              <option value='Africa'>Africa</option>
-              <option value='America'>America</option>
-              <option value='Asia'>Asia</option>
-              <option value='Europe'>Europe</option>
-              <option value='Oceania'>Oceania</option>
-            </select>
-          </form>
+          <CustomSelect />
         </section>
 
         <section className='countries'>

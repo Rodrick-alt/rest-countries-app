@@ -130,13 +130,3 @@ main .form-section form {
   outline: none;
   border: none;
 }
-
-.select-form {
-  width: 15%;
-  min-width: 225px;
-}
-.select-form select {
-  width: 100%;
-  outline: none;
-  border: none;
-}
