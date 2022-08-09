@@ -20,27 +20,12 @@ html {
   overflow-y: auto;
 }
 
-:root {
-  --light-mode-text: hsl(200, 15%, 8%);
-  --light-mode-bg: hsl(0, 0%, 98%);
-  --light-mode-input: hsl(0, 0%, 52%);
-  --light-mode-elements: hsl(0, 0%, 100%);
-}
-
-:root {
-  --dark-mode-text: hsl(0, 0%, 100%);
-  --dark-mode-elements: hsl(209, 23%, 22%);
-  --dark-mode-bg: hsl(207, 26%, 17%);
-}
-
 body,
 main,
 #root,
 #page-wrapper {
   height: 100%;
   font-family: "Nunito Sans", sans-serif;
-  color: var(--light-mode-text);
-  background-color: var(--light-mode-bg);
 }
 
 #page-wrapper,
@@ -57,6 +42,7 @@ main {
 }
 
 #page-wrapper {
+  align-items: flex-start;
   gap: 3rem;
 }
 
@@ -82,7 +68,6 @@ header {
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: var(--light-mode-elements);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 header nav {
@@ -120,7 +105,6 @@ main .form-section form {
   padding: 1rem 1.5rem;
   border-radius: 5px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  background-color: var(--light-mode-elements);
 }
 
 .search-form {
@@ -131,6 +115,7 @@ main .form-section form {
   width: 100%;
   outline: none;
   border: none;
+  background-color: transparent;
 }
 
 .countries-container {
@@ -155,7 +140,6 @@ main .form-section form {
   cursor: pointer;
   border-radius: 5px;
   padding: 0 0 1rem 0;
-  background-color: var(--light-mode-elements);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 .country-card img {
@@ -180,4 +164,62 @@ main .form-section form {
 }
 .country-card-details p strong {
   font-weight: 600;
+}
+
+:root {
+  --light-mode-text: hsl(200, 15%, 8%);
+  --light-mode-bg: hsl(0, 0%, 98%);
+  --light-mode-input: hsl(0, 0%, 52%);
+  --light-mode-elements: hsl(0, 0%, 100%);
+}
+
+:root {
+  --dark-mode-text: hsl(0, 0%, 100%);
+  --dark-mode-elements: hsl(209, 23%, 22%);
+  --dark-mode-bg: hsl(207, 26%, 17%);
+}
+
+.light-theme {
+  color: var(--light-mode-text);
+  background-color: var(--light-mode-bg);
+}
+.light-theme header {
+  background-color: var(--light-mode-elements);
+}
+.light-theme form {
+  background-color: var(--light-mode-elements);
+}
+.light-theme .country-card {
+  background-color: var(--light-mode-elements);
+}
+
+.dark-theme {
+  min-height: 100vh;
+  color: var(--dark-mode-text);
+  background-color: var(--dark-mode-bg);
+}
+.dark-theme button {
+  color: var(--dark-mode-text);
+}
+.dark-theme button img {
+  filter: invert(100%);
+}
+.dark-theme header {
+  background-color: var(--dark-mode-elements);
+}
+.dark-theme form {
+  background-color: var(--dark-mode-elements);
+}
+.dark-theme .country-card {
+  background-color: var(--dark-mode-elements);
+}
+.dark-theme ::placeholder {
+  color: var(--dark-mode-text) !important;
+}
+.dark-theme .search-form input {
+  color: var(--dark-mode-text) !important;
+}
+.dark-theme .custom-select, .dark-theme .select-selected, .dark-theme .select-items div {
+  color: var(--dark-mode-text) !important;
+  background-color: var(--dark-mode-elements) !important;
 }

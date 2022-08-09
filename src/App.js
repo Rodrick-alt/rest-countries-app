@@ -51,12 +51,23 @@ function App() {
     return [...card]
   }
 
+  function DarkMode() {
+    let page = document.getElementById('page-wrapper');
+    if (page.classList.contains('light-theme')) {
+      page.classList.remove('light-theme');
+      page.classList.add('dark-theme')
+    } else {
+      page.classList.remove('dark-theme');
+      page.classList.add('light-theme')
+    }
+  }
+
   return (
-    <div id='page-wrapper'>
+    <div id='page-wrapper' className='light-theme'>
       <header>
         <nav>
           <h1>Where in the world?</h1>
-          <button>
+          <button onClick={DarkMode}>
             <img src={require('./images/moon-solid.svg').default} alt='moon' /> Dark Mode</button>
         </nav>
       </header>
