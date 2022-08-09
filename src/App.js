@@ -9,8 +9,47 @@ function App() {
 
   // intitailizes View array
   useEffect(() => {
-    setView(old => [])
+    request()
+      .then(function (result) {
+        setView(old => CountryCard([...result]));
+      })
+      .catch(function () {
+        console.log('error')
+      })
   }, []);
+
+  function request() {
+    // Ajax Promise with then() request
+    return new Promise(function (resolve, reject) {
+      let xhr = new XMLHttpRequest();
+      xhr.onload = function (event) {
+        let obj1 = JSON.parse(event.target.response);
+        resolve(obj1);
+      }
+      xhr.onerror = reject;
+      xhr.open("GET", 'https://restcountries.com/v3.1/all');
+      xhr.send();
+    })
+  }
+
+  function CountryCard(result) {
+    let card = [];
+    for (let i = 0; i < result.length; i++) {
+      card.push(
+        <div className='country-card'>
+          <img src={result[i].flags.png} alt='country' />
+          <p>{result[i].name.official}</p>
+          <div className='country-card-details'>
+            <p><strong>Population</strong>: {result[i].population}</p>
+            <p><strong>Region</strong>: {result[i].region}</p>
+            <p><strong>Capital</strong>: {result[i].capital}</p>
+          </div>
+        </div>
+      )
+    }
+
+    return [...card]
+  }
 
   return (
     <div id='page-wrapper'>
@@ -36,8 +75,8 @@ function App() {
           <CustomSelect />
         </section>
 
-        <section className='countries'>
-
+        <section className='countries-container'>
+          {view}
         </section>
       </main>
     </div>
