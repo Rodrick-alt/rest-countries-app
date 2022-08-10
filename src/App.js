@@ -1,13 +1,14 @@
-import './Styles/App.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import './Styles/App.css';
 import CustomSelect from './Components/CustomSelect';
+
 
 function App() {
   // an array of components describing countries
   let [view, setView] = useState([]);
 
-  // intitailizes View array
+  // intitailizes View array on first load
   useEffect(() => {
     request()
       .then(function (result) {
@@ -18,7 +19,7 @@ function App() {
       })
   }, []);
 
-  function request() {
+  function request(parem = 'all') {
     // Ajax Promise with then() request
     return new Promise(function (resolve, reject) {
       let xhr = new XMLHttpRequest();
@@ -27,7 +28,7 @@ function App() {
         resolve(obj1);
       }
       xhr.onerror = reject;
-      xhr.open("GET", 'https://restcountries.com/v3.1/all');
+      xhr.open("GET", `https://restcountries.com/v3.1/${parem}`);
       xhr.send();
     })
   }
@@ -62,6 +63,18 @@ function App() {
     }
   }
 
+  // Geting data Custom Select
+  function childToParent(childData) {
+    request(`region/${childData}`)
+      .then(function (result) {
+        setView(old => CountryCard([...result]));
+      })
+      .catch(function () {
+        console.log('error')
+      })
+  }
+
+
   return (
     <div id='page-wrapper' className='light-theme'>
       <header>
@@ -83,7 +96,8 @@ function App() {
               name='country-search'
               placeholder='Search for a country...' />
           </form>
-          <CustomSelect />
+          {/*Geting data Custom Select */}
+          <CustomSelect childToParent={childToParent} />
         </section>
 
         <section className='countries-container'>
