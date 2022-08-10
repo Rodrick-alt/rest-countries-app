@@ -6,7 +6,8 @@ import CustomSelect from './Components/CustomSelect';
 
 function App() {
   // an array of components describing countries
-  let [view, setView] = useState([]);
+  const [view, setView] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
 
   // intitailizes View array on first load
   useEffect(() => {
@@ -48,7 +49,6 @@ function App() {
         </div>
       )
     }
-
     return [...card]
   }
 
@@ -63,7 +63,7 @@ function App() {
     }
   }
 
-  // Geting data Custom Select
+  // Geting data Custom Select + Region Call
   function childToParent(childData) {
     request(`region/${childData}`)
       .then(function (result) {
@@ -72,6 +72,39 @@ function App() {
       .catch(function () {
         console.log('error')
       })
+  }
+
+  function HandleSearchInput(event) {
+    setSearchValue(old => event.target.value);
+  }
+
+  function searchByName(event) {
+    event.preventDefault();
+    if (searchValue === '') {
+      request()
+        .then(function (result) {
+          if (result.status !== 404) {
+            console.log(result);
+            setView(old => CountryCard([...result]));
+            setSearchValue(old => '');
+          }
+        })
+        .catch(function () {
+          console.log('error')
+        })
+    } else {
+      request(`name/${searchValue}`)
+        .then(function (result) {
+          if (result.status !== 404) {
+            console.log(result);
+            setView(old => CountryCard([...result]));
+            setSearchValue(old => '');
+          }
+        })
+        .catch(function () {
+          console.log('error')
+        })
+    }
   }
 
 
@@ -87,11 +120,14 @@ function App() {
 
       <main>
         <section className='form-section'>
-          <form action='' className='search-form'>
-            <button type='submit'>
+          <form className='search-form'>
+            <button type='submit'
+              onClick={searchByName}>
               <img src={require('./images/search-solid.svg').default} alt='search' />
             </button>
             <input type={'search'}
+              autoComplete='country-name'
+              onChange={HandleSearchInput}
               id='country-search'
               name='country-search'
               placeholder='Search for a country...' />
