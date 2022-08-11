@@ -140,6 +140,8 @@ main{
   img{
     width: 100%;
     height: auto;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
   }
   p{
     font-size: 1.3rem;
@@ -174,6 +176,12 @@ main{
   --dark-mode-elements: hsl(209, 23%, 22%);
   --dark-mode-bg: hsl(207, 26%, 17%);
 }
+.lightBG{
+  background-color: var(--light-mode-bg);
+}
+.darkBG{
+  background-color: var(--dark-mode-bg);
+}
 
 .light-theme{
   color: var(--light-mode-text);
@@ -190,7 +198,6 @@ main{
 }
 
 .dark-theme{
-  min-height: 100vh;
   color: var(--dark-mode-text);
   background-color: var(--dark-mode-bg);
   button{
@@ -222,5 +229,11 @@ main{
   .custom-select, .select-selected, .select-items div{
     color: var(--dark-mode-text) !important;
     background-color: var(--dark-mode-elements) !important;
+  }
+  .select-selected:after {
+    border-color: rgb(255, 255, 255) transparent transparent transparent !important;
+  }
+  .select-selected.select-arrow-active:after {
+    border-color: transparent transparent rgb(255, 255, 255) !important;
   }
 }

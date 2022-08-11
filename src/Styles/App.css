@@ -145,6 +145,8 @@ main .form-section form {
 .country-card img {
   width: 100%;
   height: auto;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 .country-card p {
   font-size: 1.3rem;
@@ -179,6 +181,14 @@ main .form-section form {
   --dark-mode-bg: hsl(207, 26%, 17%);
 }
 
+.lightBG {
+  background-color: var(--light-mode-bg);
+}
+
+.darkBG {
+  background-color: var(--dark-mode-bg);
+}
+
 .light-theme {
   color: var(--light-mode-text);
   background-color: var(--light-mode-bg);
@@ -194,7 +204,6 @@ main .form-section form {
 }
 
 .dark-theme {
-  min-height: 100vh;
   color: var(--dark-mode-text);
   background-color: var(--dark-mode-bg);
 }
@@ -222,4 +231,10 @@ main .form-section form {
 .dark-theme .custom-select, .dark-theme .select-selected, .dark-theme .select-items div {
   color: var(--dark-mode-text) !important;
   background-color: var(--dark-mode-elements) !important;
+}
+.dark-theme .select-selected:after {
+  border-color: rgb(255, 255, 255) transparent transparent transparent !important;
+}
+.dark-theme .select-selected.select-arrow-active:after {
+  border-color: transparent transparent rgb(255, 255, 255) !important;
 }
