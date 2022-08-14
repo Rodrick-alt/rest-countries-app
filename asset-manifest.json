@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/rest-countries-app/static/css/main.dfd21b96.css",
-    "main.js": "/rest-countries-app/static/js/main.3ed06354.js",
+    "main.js": "/rest-countries-app/static/js/main.ae862c38.js",
     "static/media/sun-solid.svg": "/rest-countries-app/static/media/sun-solid.8a221d8b5d63b1a9241ddce9d9be1d4e.svg",
     "index.html": "/rest-countries-app/index.html",
     "static/media/search-solid.svg": "/rest-countries-app/static/media/search-solid.7b640bcb34251e930bc6bcc099389fe8.svg",
     "static/media/moon-solid.svg": "/rest-countries-app/static/media/moon-solid.9305a6481f14edfd675e7784d0e7d8a0.svg",
     "static/media/arrow-left-solid.svg": "/rest-countries-app/static/media/arrow-left-solid.861038d8f3b2b6289b28993cedce307c.svg",
     "main.dfd21b96.css.map": "/rest-countries-app/static/css/main.dfd21b96.css.map",
-    "main.3ed06354.js.map": "/rest-countries-app/static/js/main.3ed06354.js.map"
+    "main.ae862c38.js.map": "/rest-countries-app/static/js/main.ae862c38.js.map"
   },
   "entrypoints": [
     "static/css/main.dfd21b96.css",
-    "static/js/main.3ed06354.js"
+    "static/js/main.ae862c38.js"
   ]
 }
