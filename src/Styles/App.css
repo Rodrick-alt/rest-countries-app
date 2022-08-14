@@ -58,6 +58,7 @@ button {
   outline: none;
   border: none;
   background-color: transparent;
+  text-decoration: none;
 }
 button img {
   width: 20px;
@@ -209,6 +210,7 @@ main .form-section form {
 }
 .dark-theme button {
   color: var(--dark-mode-text);
+  background-color: var(--dark-mode-elements);
 }
 .dark-theme button img {
   filter: invert(100%);

@@ -1,19 +1,24 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Styles/App.css';
-import CustomSelect from './Components/CustomSelect';
 import moon from './images/moon-solid.svg';
 import sun from './images/sun-solid.svg';
+import CustomSelect from './Components/CustomSelect';
 
 function App() {
   // an array of components describing countries
   const [view, setView] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const [modeBTN, setModeBTN] = useState([moon, 'Dark Mode']);
-  const [theme, setTheme] = useState('light-theme');
+  const [theme, setTheme] = useState(['light-theme', [moon, 'Dark Mode']]);
+  const navigate = useNavigate();
 
-  // intitailizes View array on first load
   useEffect(() => {
+    // follow current theme
+    let htmlBG = document.documentElement;
+    if (htmlBG.classList.contains('darkBG')) {
+      setTheme(old => ['dark-theme', [sun, 'Light Mode']])
+    }
+    // intitailizes View array on first load
     request()
       .then(function (result) {
         setView(old => CountryCard([...result]));
@@ -22,6 +27,7 @@ function App() {
         console.log('error')
       })
   }, []);
+
 
   function request(parem = 'all') {
     // Ajax Promise with then() request
@@ -37,18 +43,47 @@ function App() {
     })
   }
 
+  // Handle navigating and passing info to detail page
+  function handleClick(name, border) {
+    if (border) {
+      request(`alpha?codes=${border.toString()}`)
+        .then(function (result) {
+          let arr = [];
+          for (let i = 0; i < 2; i++) {
+            arr.push(result[i].name.official)
+          }
+          navigate('/detail', {
+            state: {
+              name: name,
+              borders: arr,
+            }
+          })
+        })
+        .catch(function () {
+          console.log('error')
+        })
+    } else {
+      navigate('/detail', {
+        state: {
+          name: name,
+          borders: [],
+        }
+      })
+    }
+  }
+
+  // builds country cards for every country
   function CountryCard(result) {
     let card = [];
     for (let i = 0; i < result.length; i++) {
       card.push(
         <div className='country-card'
-          key={result[i].name.official}>
-          <a href='./public/Detail.html' target={'_blank'}>
-            <img src={result[i].flags.png} alt='country' />
-          </a>
+          key={result[i].name.official}
+          onClick={() => handleClick(result[i].name.official, result[i].borders)}>
+          <img src={result[i].flags.png} alt='country' />
           <p>{result[i].name.official}</p>
           <div className='country-card-details'>
-            <p><strong>Population</strong>: {result[i].population}</p>
+            <p><strong>Population</strong>: {parseInt(result[i].population).toLocaleString('en-US')}</p>
             <p><strong>Region</strong>: {result[i].region}</p>
             <p><strong>Capital</strong>: {result[i].capital}</p>
           </div>
@@ -58,26 +93,8 @@ function App() {
     return [...card]
   }
 
-  function DarkMode() {
-    let htmlBG = document.documentElement;
-    if (htmlBG.classList.contains('lightBG')) {
-      htmlBG.classList.remove('lightBG');
-      htmlBG.classList.add('darkBG');
-    } else {
-      htmlBG.classList.remove('darkBG');
-      htmlBG.classList.add('lightBG');
-    }
 
-    if (theme === 'light-theme') {
-      setTheme(old => 'dark-theme');
-      setModeBTN(old => [sun, 'Light Mode']);
-    } else {
-      setTheme(old => 'light-theme')
-      setModeBTN(old => [moon, 'Dark Mode']);
-    }
-  }
-
-  // Geting data Custom Select + Region Call
+  // Geting data from Custom Select & making API Region Call
   function childToParent(childData) {
     request(`region/${childData}`)
       .then(function (result) {
@@ -92,6 +109,7 @@ function App() {
     setSearchValue(old => event.target.value);
   }
 
+  // getting search input & making API Search Call
   function searchByName(event) {
     event.preventDefault();
     if (searchValue === '') {
@@ -122,13 +140,31 @@ function App() {
   }
 
 
+  function DarkMode() {
+    let htmlBG = document.documentElement;
+    if (htmlBG.classList.contains('lightBG')) {
+      htmlBG.classList.remove('lightBG');
+      htmlBG.classList.add('darkBG');
+    } else {
+      htmlBG.classList.remove('darkBG');
+      htmlBG.classList.add('lightBG');
+    }
+
+    if (theme[0] === 'light-theme') {
+      setTheme(old => ['dark-theme', [sun, 'Light Mode']]);
+    } else {
+      setTheme(old => ['light-theme', [moon, 'Dark Mode']])
+    }
+  }
+
+
   return (
-    <div id='page-wrapper' className={theme}>
+    <div id='page-wrapper' className={theme[0]}>
       <header>
         <nav>
           <h1>Where in the world?</h1>
           <button onClick={DarkMode}>
-            <img src={modeBTN[0]} alt='moon' /> {modeBTN[1]}</button>
+            <img src={theme[1][0]} alt='moon' /> {theme[1][1]}</button>
         </nav>
       </header>
 
