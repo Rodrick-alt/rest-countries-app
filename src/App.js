@@ -18,6 +18,7 @@ function App() {
     if (htmlBG.classList.contains('darkBG')) {
       setTheme(old => ['dark-theme', [sun, 'Light Mode']])
     }
+
     // intitailizes View array on first load
     request()
       .then(function (result) {

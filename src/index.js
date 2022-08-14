@@ -7,10 +7,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function Index() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route>
-          <Route index element={<App />} />
+          <Route exact path='/' element={<App />} />
           <Route path="/detail" element={<DetailPage />} />
         </Route>
       </Routes>
