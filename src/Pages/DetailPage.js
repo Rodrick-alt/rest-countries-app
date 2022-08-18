@@ -53,7 +53,7 @@ function DetailPage(props) {
 
 
   function border() {
-    // border
+    // Populates Country Components boreder section with Correct Countries. 
     let arr = [];
     if (state.borders.length === 0) {
       arr.push(
@@ -86,7 +86,7 @@ function DetailPage(props) {
 
 
   function Country(result) {
-    // country details
+    // Builds the page main info
     let detail = [];
 
     detail.push(
