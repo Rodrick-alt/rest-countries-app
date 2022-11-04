@@ -19,14 +19,31 @@ function App() {
       setTheme(old => ['dark-theme', [sun, 'Light Mode']])
     }
 
-    // intitailizes View array on first load
-    request()
-      .then(function (result) {
-        setView(old => CountryCard([...result]));
-      })
-      .catch(function () {
-        console.log('error')
-      })
+    // Only get countrydata from temp sessionstorage (if any) after the first load. 
+    if (typeof (Storage) !== "undefined" &&
+      sessionStorage.getItem('countryData') !== null) {
+      const newJSON = sessionStorage.getItem("countryData");
+      const newPLAY = JSON.parse(newJSON);
+      setView(old => CountryCard([...newPLAY]));
+    } else {
+
+      // intitailizes View array on first load
+      request()
+        .then(function (result) {
+          // SessionStorage
+          if (typeof (Storage) !== "undefined") {
+            sessionStorage.setItem("countryData", result);
+          }
+          setView(old => {
+            let obj = JSON.parse(result)
+            return CountryCard([...obj]);
+          });
+
+        })
+        .catch(function () {
+          console.log('error')
+        })
+    }
   }, []);
 
 
@@ -35,8 +52,8 @@ function App() {
     return new Promise(function (resolve, reject) {
       let xhr = new XMLHttpRequest();
       xhr.onload = function (event) {
-        let obj1 = JSON.parse(event.target.response);
-        resolve(obj1);
+        // raw unparsed Json data
+        resolve(event.target.response);
       }
       xhr.onerror = reject;
       xhr.open("GET", `https://restcountries.com/v3.1/${parem}`);
@@ -49,9 +66,10 @@ function App() {
     if (border) {
       request(`alpha?codes=${border.toString()}`)
         .then(function (result) {
+          let obj = JSON.parse(result)
           let arr = [];
           for (let i = 0; i < 2; i++) {
-            arr.push(result[i].name.official)
+            arr.push(obj[i].name.official)
           }
           navigate('/detail', {
             state: {
@@ -73,7 +91,7 @@ function App() {
     }
   }
 
-  // builds country cards for every country
+  // builds cards for every country
   function CountryCard(result) {
     let card = [];
     for (let i = 0; i < result.length; i++) {
@@ -91,6 +109,7 @@ function App() {
         </div>
       )
     }
+
     return [...card]
   }
 
@@ -99,7 +118,8 @@ function App() {
   function childToParent(childData) {
     request(`region/${childData}`)
       .then(function (result) {
-        setView(old => CountryCard([...result]));
+        let obj = JSON.parse(result)
+        setView(old => CountryCard([...obj]));
       })
       .catch(function () {
         console.log('error')
@@ -116,9 +136,10 @@ function App() {
     if (searchValue === '') {
       request()
         .then(function (result) {
-          if (result.status !== 404) {
+          let obj = JSON.parse(result)
+          if (obj.status !== 404) {
             console.log(result);
-            setView(old => CountryCard([...result]));
+            setView(old => CountryCard([...obj]));
             setSearchValue(old => '');
           }
         })
@@ -128,9 +149,10 @@ function App() {
     } else {
       request(`name/${searchValue}`)
         .then(function (result) {
-          if (result.status !== 404) {
+          let obj = JSON.parse(result)
+          if (obj.status !== 404) {
             console.log(result);
-            setView(old => CountryCard([...result]));
+            setView(old => CountryCard([...obj]));
             setSearchValue(old => '');
           }
         })
