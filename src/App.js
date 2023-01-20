@@ -5,12 +5,14 @@ import moon from './images/moon-solid.svg';
 import sun from './images/sun-solid.svg';
 import CustomSelect from './Components/CustomSelect';
 
+
 function App() {
   // an array of components describing countries
   const [view, setView] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [theme, setTheme] = useState(['light-theme', [moon, 'Dark Mode']]);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     // follow current theme
@@ -26,7 +28,6 @@ function App() {
       const newPLAY = JSON.parse(newJSON);
       setView(old => CountryCard([...newPLAY]));
     } else {
-
       // intitailizes View array on first load
       request()
         .then(function (result) {
@@ -61,6 +62,7 @@ function App() {
     })
   }
 
+
   // Handle navigating and passing info to detail page
   function handleClick(name, border) {
     if (border) {
@@ -71,7 +73,7 @@ function App() {
           for (let i = 0; i < 2; i++) {
             arr.push(obj[i].name.official)
           }
-          navigate('/detail', {
+          navigate('details', {
             state: {
               name: name,
               borders: arr,
@@ -82,7 +84,7 @@ function App() {
           console.log('error')
         })
     } else {
-      navigate('/detail', {
+      navigate('details', {
         state: {
           name: name,
           borders: [],
@@ -90,6 +92,7 @@ function App() {
       })
     }
   }
+
 
   // builds cards for every country
   function CountryCard(result) {
@@ -109,7 +112,6 @@ function App() {
         </div>
       )
     }
-
     return [...card]
   }
 
@@ -126,9 +128,11 @@ function App() {
       })
   }
 
+
   function HandleSearchInput(event) {
     setSearchValue(old => event.target.value);
   }
+
 
   // getting search input & making API Search Call
   function searchByName(event) {

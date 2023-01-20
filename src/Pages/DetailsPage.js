@@ -1,12 +1,12 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../Styles/DetailPage.css';
 import moon from '../images/moon-solid.svg';
 import sun from '../images/sun-solid.svg';
 import arrow from '../images/arrow-left-solid.svg';
 
-function DetailPage(props) {
+function DetailsPage(props) {
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -19,25 +19,18 @@ function DetailPage(props) {
     if (htmlBG.classList.contains('darkBG')) {
       setTheme(old => ['dark-theme', [sun, 'Light Mode']])
     }
-    // intitailizes View array on first load
-    request(`name/${String(state.name)}`)
+    // intializes View array on first load
+    request(`${String(state.name)}`)
       .then(function (result) {
-        // console.log(result[0])
         setCountryArr(old => [...Country(result)]);
       })
       .catch(function () {
-        console.log('error')
+        console.log('error on Intial')
       })
-
   }, []);
 
 
-  function backBtn() {
-    navigate(-1)
-  }
-
-
-  function request(parem = 'name/USA') {
+  function request(parem = 'USA') {
     // Ajax Promise with then() request
     return new Promise(function (resolve, reject) {
       let xhr = new XMLHttpRequest();
@@ -46,7 +39,7 @@ function DetailPage(props) {
         resolve(obj1);
       }
       xhr.onerror = reject;
-      xhr.open("GET", `https://restcountries.com/v3.1/${parem}`);
+      xhr.open("GET", `https://restcountries.com/v3.1/name/${parem}`);
       xhr.send();
     });
   }
@@ -68,12 +61,12 @@ function DetailPage(props) {
           <button className='border-btn'
             key={`border-btn-${state.borders[i]}`}
             onClick={() => {
-              request(`name/${state.borders[i]}`)
+              request(`${state.borders[i]}`)
                 .then(function (result) {
                   setCountryArr(old => [...Country(result)]);
                 })
                 .catch(function () {
-                  console.log('error')
+                  console.log('error on Border')
                 })
             }}>
             {state.borders[i]}
@@ -90,12 +83,13 @@ function DetailPage(props) {
     let detail = [];
 
     detail.push(
-      <section key={`detailPage${result[0].name.official}`} className='container'>
+      <section key='Detail Info' className='container'>
         <button
-          onClick={backBtn}>
-          <img src={arrow} alt='arrow' /> Back
+          onClick={() => navigate(-1)}>
+          <img src={arrow} alt='arrow' />
+          Back
         </button>
-        {/* {console.log(result)} */}
+
         <section className='details'>
           <img src={result[0].flags.png} alt='flag' />
           <div className='details-container'>
@@ -109,10 +103,13 @@ function DetailPage(props) {
               <p><strong>Capital:</strong> {result[0].capital}</p>
               <p><strong>Top Level Domain:</strong> {result[0].tld[0]}</p>
               <p><strong>Currencies: </strong>
-                {result[0].currencies[Object.keys(result[0].currencies)[0]].name}</p>
+                {result[0].currencies ? result[0].currencies[Object.keys(result[0].currencies)[0]].name : 'None'}
+              </p>
               <p><strong>Languages: </strong>
-                {Object.values(result[0].languages).toString()}</p>
+                {Object.values(result[0].languages).toString()}
+              </p>
             </div>
+
             <div className='border-countries'>
               <p>Border Countries</p>
               {border()}
@@ -158,4 +155,4 @@ function DetailPage(props) {
   )
 }
 
-export default DetailPage;
+export default DetailsPage;

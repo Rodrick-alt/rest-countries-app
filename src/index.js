@@ -2,19 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './Styles/Index.css';
 import App from './App';
-import DetailPage from './Pages/DetailPage';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import NoPage from './Pages/NoPage'
+import DetailsPage from './Pages/DetailsPage';
+import { HashRouter, Routes, Route } from "react-router-dom";
 
 export default function Index() {
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <HashRouter>
       <Routes>
         <Route>
           <Route exact path='/' element={<App />} />
-          <Route path="/detail" element={<DetailPage />} />
+          <Route path="details" element={<DetailsPage />} />
+          <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 ReactDOM.render(<Index />, document.getElementById("root"));
