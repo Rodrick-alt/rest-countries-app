@@ -21,12 +21,17 @@ function App() {
       setTheme(old => ['dark-theme', [sun, 'Light Mode']])
     }
 
-    // Only get countrydata from temp sessionstorage (if any) after the first load. 
+    setUp()
+  }, []);
+
+
+  function setUp() {
+    // Only get countrydata from temp sessionstorage (if any) after 
+    // the first load. 
     if (typeof (Storage) !== "undefined" &&
-      sessionStorage.getItem('countryData') !== null) {
-      const newJSON = sessionStorage.getItem("countryData");
-      const newPLAY = JSON.parse(newJSON);
-      setView(old => CountryCard([...newPLAY]));
+      sessionStorage.getItem('countryData') !== null && view === []) {
+      const newJSON = JSON.parse(sessionStorage.getItem("countryData"));
+      setView(old => CountryCard([...newJSON]));
     } else {
       // intitailizes View array on first load
       request()
@@ -35,17 +40,18 @@ function App() {
           if (typeof (Storage) !== "undefined") {
             sessionStorage.setItem("countryData", result);
           }
-          setView(old => {
-            let obj = JSON.parse(result)
-            return CountryCard([...obj]);
-          });
-
+          if (view !== []) {
+            setView(old => {
+              let obj = JSON.parse(result)
+              return CountryCard([...obj]);
+            });
+          }
         })
         .catch(function () {
           console.log('error')
         })
     }
-  }, []);
+  }
 
 
   function request(parem = 'all') {
@@ -64,33 +70,18 @@ function App() {
 
 
   // Handle navigating and passing info to detail page
-  function handleClick(name, border) {
-    if (border) {
-      request(`alpha?codes=${border.toString()}`)
-        .then(function (result) {
-          let obj = JSON.parse(result)
-          let arr = [];
-          for (let i = 0; i < 2; i++) {
-            arr.push(obj[i].name.official)
-          }
-          navigate('details', {
-            state: {
-              name: name,
-              borders: arr,
-            }
-          })
-        })
-        .catch(function () {
-          console.log('error')
-        })
-    } else {
-      navigate('details', {
-        state: {
-          name: name,
-          borders: [],
-        }
-      })
-    }
+  function handleClick(img, nameOfficial, nameNative, pop, reg, subReg, cap, tld, cur, lang, border) {
+    navigate('details', {
+      state: {
+        infoArr: [
+          img, nameOfficial, nameNative,
+          pop, reg,
+          subReg, cap,
+          tld, cur,
+          lang, border
+        ]
+      }
+    })
   }
 
 
@@ -99,10 +90,22 @@ function App() {
     let card = [];
     for (let i = 0; i < result.length; i++) {
       card.push(
-        <div className='country-card'
+        <div loading='lazy' className='country-card'
           key={result[i].name.official}
-          onClick={() => handleClick(result[i].name.official, result[i].borders)}>
-          <img src={result[i].flags.png} alt='country' />
+          onClick={() => handleClick(
+            result[i].flags.png,
+            result[i].name.official,
+            result[i].name.nativeName[Object.keys(result[i].name.nativeName)[0]].official,
+            result[i].population,
+            result[i].region,
+            result[i].subregion,
+            result[i].capital,
+            result[i].tld[0],
+            result[i].currencies ? result[i].currencies[Object.keys(result[i].currencies)[0]].name : 'None',
+            Object.values(result[i].languages).toString(),
+            result[i].borders ? result[i].borders : []
+          )}>
+          <img loading='lazy' src={result[i].flags.png} alt='country' />
           <p>{result[i].name.official}</p>
           <div className='country-card-details'>
             <p><strong>Population</strong>: {parseInt(result[i].population).toLocaleString('en-US')}</p>
@@ -118,14 +121,18 @@ function App() {
 
   // Geting data from Custom Select & making API Region Call
   function childToParent(childData) {
-    request(`region/${childData}`)
-      .then(function (result) {
-        let obj = JSON.parse(result)
-        setView(old => CountryCard([...obj]));
-      })
-      .catch(function () {
-        console.log('error')
-      })
+    if (childData === 'World-wide') {
+      setUp()
+    } else {
+      request(`region/${childData}`)
+        .then(function (result) {
+          let obj = JSON.parse(result)
+          setView(old => CountryCard([...obj]));
+        })
+        .catch(function () {
+          console.log('error')
+        })
+    }
   }
 
 
@@ -136,26 +143,12 @@ function App() {
 
   // getting search input & making API Search Call
   function searchByName(event) {
-    event.preventDefault();
-    if (searchValue === '') {
-      request()
-        .then(function (result) {
-          let obj = JSON.parse(result)
-          if (obj.status !== 404) {
-            console.log(result);
-            setView(old => CountryCard([...obj]));
-            setSearchValue(old => '');
-          }
-        })
-        .catch(function () {
-          console.log('error')
-        })
-    } else {
+    if (searchValue !== '') {
+      event.preventDefault();
       request(`name/${searchValue}`)
         .then(function (result) {
           let obj = JSON.parse(result)
           if (obj.status !== 404) {
-            console.log(result);
             setView(old => CountryCard([...obj]));
             setSearchValue(old => '');
           }
@@ -207,6 +200,7 @@ function App() {
               onChange={HandleSearchInput}
               id='country-search'
               name='country-search'
+              required
               placeholder='Search for a country...' />
           </form>
           {/*Geting data Custom Select */}

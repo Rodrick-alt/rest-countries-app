@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './Styles/Index.css';
 import App from './App';
 import NoPage from './Pages/NoPage'
@@ -19,4 +20,7 @@ export default function Index() {
     </HashRouter>
   );
 }
-ReactDOM.render(<Index />, document.getElementById("root"));
+const root = createRoot(document.getElementById('root'));
+root.render(
+  <Index />
+);

@@ -91,11 +91,12 @@ function CustomSelect({ childToParent }) {
     <div className="custom-select" style={{ width: '200px' }}>
       <select>
         <option value="0">Filter by Region</option>
-        <option value="1">Africa</option>
-        <option value="2">America</option>
-        <option value="3">Asia</option>
-        <option value="4">Europe</option>
-        <option value="5">Oceania</option>
+        <option value="1">World-wide</option>
+        <option value="2">Africa</option>
+        <option value="3">America</option>
+        <option value="4">Asia</option>
+        <option value="5">Europe</option>
+        <option value="6">Oceania</option>
       </select>
     </div>
   )

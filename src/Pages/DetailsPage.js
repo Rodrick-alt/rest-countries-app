@@ -12,6 +12,8 @@ function DetailsPage(props) {
 
   const [theme, setTheme] = useState(['light-theme', [moon, 'Dark Mode']]);
   const [countryArr, setCountryArr] = useState([]);
+  const [pageState, setPageState] = useState(state.infoArr);
+
 
   useEffect(() => {
     // follow current theme
@@ -19,15 +21,54 @@ function DetailsPage(props) {
     if (htmlBG.classList.contains('darkBG')) {
       setTheme(old => ['dark-theme', [sun, 'Light Mode']])
     }
-    // intializes View array on first load
-    request(`${String(state.name)}`)
-      .then(function (result) {
-        setCountryArr(old => [...Country(result)]);
-      })
-      .catch(function () {
-        console.log('error on Intial')
-      })
-  }, []);
+
+    // intializes View array on first load 
+    // & rehydrates with new pagestate info when border button triggered
+    if (pageState[10].length > 0) {
+      request(`${pageState[10].toLocaleString()}`)
+        .then(function (result) {
+          let arr = []
+          for (let i = 0; i < pageState[10].length; i++) {
+            arr.push(
+              <button className='border-btn'
+                key={`border-btn-${i}`}
+                onClick={() => {
+                  setPageState(old => [
+                    result[i].flags.png,
+                    result[i].name.official,
+                    result[i].name.nativeName[Object.keys(result[i].name.nativeName)[0]].official,
+                    result[i].population,
+                    result[i].region,
+                    result[i].subregion,
+                    result[i].capital,
+                    result[i].tld[0],
+                    result[i].currencies ? result[i].currencies[Object.keys(result[i].currencies)[0]].name : 'None',
+                    Object.values(result[i].languages).join(', '),
+                    result[i].borders ? result[i].borders : []
+                  ])
+                }}>
+                {result[i].name.common}
+              </button>
+            )
+          }
+          setCountryArr(old => {
+            return [...Country(pageState, arr)]
+          });
+        })
+    } else {
+      setCountryArr(old => {
+        return [...Country(pageState,
+          [
+            <button className='border-btn'
+              key={'border-btn-none'}>
+              No Bordering Countries
+            </button>
+          ])
+        ]
+      });
+    }
+
+  }, [pageState]);
 
 
   function request(parem = 'USA') {
@@ -39,86 +80,47 @@ function DetailsPage(props) {
         resolve(obj1);
       }
       xhr.onerror = reject;
-      xhr.open("GET", `https://restcountries.com/v3.1/name/${parem}`);
+      xhr.open("GET", `https://restcountries.com/v3.1/alpha?codes=${parem}`);
       xhr.send();
     });
   }
 
 
-  function border() {
-    // Populates Country Components boreder section with Correct Countries. 
-    let arr = [];
-    if (state.borders.length === 0) {
-      arr.push(
-        <button className='border-btn'
-          key={'border-btn-none'}>
-          No Bordering Countries
-        </button>
-      )
-    } else {
-      for (let i = 0; i < state.borders.length; i++) {
-        arr.push(
-          <button className='border-btn'
-            key={`border-btn-${state.borders[i]}`}
-            onClick={() => {
-              request(`${state.borders[i]}`)
-                .then(function (result) {
-                  setCountryArr(old => [...Country(result)]);
-                })
-                .catch(function () {
-                  console.log('error on Border')
-                })
-            }}>
-            {state.borders[i]}
-          </button>
-        )
-      }
-    }
-    return [...arr];
-  }
-
-
-  function Country(result) {
+  function Country(countryState, borderState) {
     // Builds the page main info
     let detail = [];
 
     detail.push(
-      <section key='Detail Info' className='container'>
-        <button
-          onClick={() => navigate(-1)}>
-          <img src={arrow} alt='arrow' />
-          Back
-        </button>
-
-        <section className='details'>
-          <img src={result[0].flags.png} alt='flag' />
-          <div className='details-container'>
-            <h2>{result[0].name.official}</h2>
-            <div >
-              <p><strong>Native Name: </strong>
-                {result[0].name.nativeName[Object.keys(result[0].name.nativeName)[0]].official}</p>
-              <p><strong>Population:</strong> {parseInt(result[0].population).toLocaleString('en-US')}</p>
-              <p><strong>Region:</strong> {result[0].region}</p>
-              <p><strong>Sub Region:</strong> {result[0].subregion}</p>
-              <p><strong>Capital:</strong> {result[0].capital}</p>
-              <p><strong>Top Level Domain:</strong> {result[0].tld[0]}</p>
-              <p><strong>Currencies: </strong>
-                {result[0].currencies ? result[0].currencies[Object.keys(result[0].currencies)[0]].name : 'None'}
-              </p>
-              <p><strong>Languages: </strong>
-                {Object.values(result[0].languages).toString()}
-              </p>
+      <section key='Detail Info' className='details'>
+        <img src={countryState[0]} alt='flag' />
+        <div className='details-container'>
+          <h2>{countryState[1]}</h2>
+          <div className='info-container'>
+            <div className='info'>
+              <p><strong>Native Name: </strong>{countryState[2]}</p>
+              <p><strong>Population:</strong> {parseInt(countryState[3]).toLocaleString('en-US')}</p>
+              <p><strong>Region:</strong> {countryState[4]}</p>
+              <p><strong>Sub Region:</strong> {countryState[5]}</p>
+              <p><strong>Capital:</strong> {countryState[6]}</p>
             </div>
 
-            <div className='border-countries'>
-              <p>Border Countries</p>
-              {border()}
+            <div className='info info--special'>
+              <p><strong>Top Level Domain:</strong> {countryState[7]}</p>
+              <p><strong>Currencies: </strong> {countryState[8]} </p>
+              <p><strong>Languages: </strong> {countryState[9]} </p>
             </div>
           </div>
-        </section>
+
+          <div className='border-countries'>
+            <p>Border Countries:</p>
+            {[...borderState]}
+          </div>
+        </div>
       </section>);
+
     return detail
   }
+
 
 
   function DarkMode() {
@@ -149,10 +151,18 @@ function DetailsPage(props) {
       </header>
 
       <main className='detail-main'>
-        {countryArr}
+        <section className='container'>
+          <button
+            onClick={() => navigate(-1)}>
+            <img src={arrow} alt='arrow' />
+            Back
+          </button>
+          {countryArr}
+        </section>
       </main>
     </div>
   )
 }
 
 export default DetailsPage;
+
