@@ -20,8 +20,7 @@ function DetailsPage(props) {
   useEffect(() => {
     // follow current theme
     let htmlBG = document.documentElement;
-    if (htmlBG.classList.contains('darkBG') &&
-      theme !== 'dark-theme') {
+    if (htmlBG.classList.contains('darkBG')) {
       setTheme(old => 'dark-theme')
       setThemeBtn(old => [sun, 'Light Mode'])
     } else {
