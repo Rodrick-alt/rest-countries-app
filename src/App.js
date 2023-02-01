@@ -10,15 +10,23 @@ function App() {
   // an array of components describing countries
   const [view, setView] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const [theme, setTheme] = useState(['light-theme', [moon, 'Dark Mode']]);
+
+  const [theme, setTheme] = useState();
+  const [themeBtn, setThemeBtn] = useState([moon, 'Dark Mode']);
+
   const navigate = useNavigate();
 
 
   useEffect(() => {
     // follow current theme
     let htmlBG = document.documentElement;
-    if (htmlBG.classList.contains('darkBG')) {
-      setTheme(old => ['dark-theme', [sun, 'Light Mode']])
+    if (htmlBG.classList.contains('darkBG') &&
+      theme !== 'dark-theme') {
+      setTheme(old => 'dark-theme')
+      setThemeBtn(old => [sun, 'Light Mode'])
+    } else {
+      setTheme(old => 'light-theme')
+      setThemeBtn(old => [moon, 'Dark Mode'])
     }
 
     setUp()
@@ -169,22 +177,23 @@ function App() {
       htmlBG.classList.remove('darkBG');
       htmlBG.classList.add('lightBG');
     }
-
-    if (theme[0] === 'light-theme') {
-      setTheme(old => ['dark-theme', [sun, 'Light Mode']]);
+    if (theme === 'light-theme') {
+      setTheme(old => 'dark-theme')
+      setThemeBtn(old => [sun, 'Light Mode'])
     } else {
-      setTheme(old => ['light-theme', [moon, 'Dark Mode']])
+      setTheme(old => 'light-theme')
+      setThemeBtn(old => [moon, 'Dark Mode'])
     }
   }
 
 
   return (
-    <div id='page-wrapper' className={theme[0]}>
+    <div id='page-wrapper' className={theme}>
       <header>
         <nav>
           <h1>Where in the world?</h1>
           <button onClick={DarkMode}>
-            <img src={theme[1][0]} alt='moon' /> {theme[1][1]}</button>
+            <img src={themeBtn[0]} alt='moon' /> {themeBtn[1]}</button>
         </nav>
       </header>
 
